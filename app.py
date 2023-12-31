@@ -7,6 +7,15 @@ import subprocess
 
 app = Flask(__name__)
 
+
+@app.route('/models', methods=['GET'])
+def list_onnx_files():
+    directory = '/app/deploy'
+    files = [file for file in os.listdir(directory) if file.endswith('.onnx')]
+    files = [f.replace('/app/deploy/','').replace('AnimeGANv3_', '').replace('.onnx','') for f in files]
+    return jsonify(files)
+
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -44,4 +53,4 @@ def upload_file():
         return return_data
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)
